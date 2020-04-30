@@ -1,0 +1,202 @@
+<!-- templates/home_page.html -->
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+  <!--Main layout-->
+  <main>
+    <div class="container">
+      <!--Navbar -->
+      <nav style="background-color: #8080ff !important;" class="navbar navbar-expand-lg navbar-dark mt-3 mb-5">
+        <!-- Navbar brand -->
+        <span class="navbar-brand">Categories:</span>
+        <!-- Collapse button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
+          aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="basicExampleNav">
+          <!-- Links -->
+          <form class="form-inline my-2 my-lg-0 ml-auto" action="{% url 'home_page' %}" method="get">
+            {% csrf_token %}
+            {{ filter.form }}
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item float-left active">
+                <input name="all" type="submit"
+                       class="btn text-white"
+                       style="color: #929fba;"
+                       value="all">
+                </input>
+              </li>
+              <li class="nav-item">
+                <input name="his" type="submit" class="btn text-white"
+                       style="color: #929fba;"
+                       value="History">
+                </input>
+              </li>
+              <li class="nav-item">
+                <input name="b&a" type="submit"
+                       class="btn text-white"
+                       style="color: #929fba;"
+                       value="Biography & Autobiography">
+                </input>
+              </li>
+              <li class="nav-item">
+                <input name="lic" type="submit"
+                       class="btn text-white"
+                       style="color: #929fba;"
+                       value="Literary Criticism">
+                </input>
+              </li>
+            </ul>
+          <!-- Links -->
+            <input name="contains_qs" class="form-control" type="text"
+                   placeholder="Search" aria-label="Search">
+          </form>
+        </div>
+        <!-- Collapsible content -->
+      </nav>
+      <!--/.Navbar-->
+      <!--Section: Products v.3-->
+      <section class="text-center mb-4">
+        <!--Grid row-->
+        <div class="row wow fadeIn">
+          <!--Grid column-->
+          {% if filtered_book_list %}
+          {% for book in filtered_book_list %}
+          <div class="col-lg-2 col-sm-4 mb-4">
+            <!--Card-->
+            <div class="card">
+              <!--Card image-->
+              <div class="view overlay">
+                {% if book.image %}
+                <a href="{{book.get_absolute_url}}">
+                  <img src="{{ book.image }}" class="card-img-top" alt="{{ book.title }}">
+                </a>
+                {% endif %}
+                <a href="{{book.get_absolute_url}}">
+                  <div class="mask rgba-white-slight"></div>
+                </a>
+              </div>
+              <!--Card image-->
+              <!--Card content-->
+              <div class="card-body text-center">
+                <!--Category & Title-->
+                <a href="{{book.get_absolute_url}}" class="grey-text">
+                  <h6>{{ book.category }}</h6>
+                </a>
+<!--                <h6>-->
+<!--                  <strong>-->
+<!--                    <a href="{{book.get_absolute_url}}" class="dark-grey-text">{{ book.title }}-->
+<!--&lt;!&ndash;                      <span class="badge badge-pill danger-color"><small>NEW</small></span>&ndash;&gt;-->
+<!--                    </a>-->
+<!--                  </strong>-->
+<!--                </h6>-->
+<!--                <h6 class="font-weight-bold blue-text">-->
+<!--                  <strong>${{ book.price }}</strong>-->
+<!--                </h6>-->
+              </div>
+              <!--Card content-->
+            </div>
+            <div class="">
+              <form name="add_to_shelf" action="{% url 'add_to_shelf' %}"
+                    method="post">
+                {% csrf_token %}
+                  <input type="hidden" name="book_id" value={{book.id}}>
+                  <button style="background-color: #8080ff !important;
+                                 color: #ffffff;" class="btn btn-sm mt-2 mb-2"
+                          name="wanttoread"
+                          type="submit">
+                      <span class="progressTrigger">Want to Read</span>
+                  </button>
+              </form>
+            </div>
+            <!--Card-->
+          </div>
+          {% endfor %}
+          <!--Grid column-->
+          {% else %}
+          {% for book in book_list %}
+          <div class="col-lg-2 col-sm-4 mb-4">
+            <!--Card-->
+            <div class="card">
+              <!--Card image-->
+              <div class="view overlay">
+                {% if book.image %}
+                <a href="{{book.get_absolute_url}}">
+                  <img src="{{ book.image }}" class="card-img-top" alt="{{ book.title }}">
+                </a>
+                {% endif %}
+                <a href="{{book.get_absolute_url}}">
+                  <div class="mask rgba-white-slight"></div>
+                </a>
+              </div>
+              <!--Card image-->
+              <!--Card content-->
+              <div class="card-body text-center">
+                <!--Category & Title-->
+                <a href="{{book.get_absolute_url}}" class="grey-text">
+                  <h6>{{ book.category }}</h6>
+                </a>
+<!--                <h6>-->
+<!--                  <strong>-->
+<!--                    <a href="{{book.get_absolute_url}}" class="dark-grey-text">{{ book.title }}-->
+<!--&lt;!&ndash;                      <span class="badge badge-pill danger-color"><small>NEW</small></span>&ndash;&gt;-->
+<!--                    </a>-->
+<!--                  </strong>-->
+<!--                </h6>-->
+<!--                <h6 class="font-weight-bold blue-text">-->
+<!--                  <strong>${{ book.price }}</strong>-->
+<!--                </h6>-->
+              </div>
+              <!--Card content-->
+            </div>
+            <div class="">
+              <form name="add_to_shelf" action="{% url 'add_to_shelf' %}"
+                    method="post">
+                {% csrf_token %}
+                  <input type="hidden" name="book_id" value={{book.id}}>
+                  <button style="background-color: #8080ff !important;
+                                 color: #ffffff;"
+                          class="btn btn-sm mt-2 mb-2" name="wanttoread"
+                          type="submit">
+                      <span class="progressTrigger">Want to Read</span>
+                  </button>
+              </form>
+            </div>
+            <!--Card-->
+          </div>
+          {% endfor %}
+          {% endif %}
+        </div>
+        <!--Grid row-->
+      </section>
+      <!--Section: Products v.3-->
+      <div class="pagination justify-content-center mb-3">
+        <span class="step-links">
+          {% if page_obj.has_previous %}
+            {% if page_obj.has_previous == 1 %}
+            <a style="color: #8080ff !important;" href="?page=1"><b>&laquo; 1</b></a>
+            {% else %}
+            <a href="?page=1"><b>&laquo; 1</b></a>
+            <a style="color: #8080ff !important;" href="?page={{ page_obj.previous_page_number }}"><b>{{ page_obj.previous_page_number }}</b></a>
+            {% endif %}
+          {% endif %}
+          <span class="current"><b>{{page_obj.number }}</b></span>
+          {% if page_obj.has_next %}
+            {% if page_obj.next_page_number != page_obj.paginator.num_pages %}
+            <a style="color: #8080ff !important;" href="?page={{ page_obj.next_page_number }}"><b>{{page_obj.next_page_number }}</b></a>
+            <a style="color: #8080ff !important;" href="?page={{ page_obj.paginator.num_pages }}"><b>{{ page_obj.paginator.num_pages }} &raquo;</b></a>
+            {% else %}
+            <a style="color: #8080ff !important;" href="?page={{ page_obj.paginator.num_pages }}"><b>{{ page_obj.paginator.num_pages }} &raquo;</b></a>
+            {% endif %}
+          {% endif %}
+        </span>
+      </div>
+    </div>
+  </main>
+  <!--Main layout-->
+{% endblock content %}

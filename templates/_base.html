@@ -1,0 +1,121 @@
+{% load static %}
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>GREBOOVER | HomePage</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/mdb.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style.min.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+    <div class="container">
+      <!-- Brand -->
+      <a class="navbar-brand waves-effect" href="/" target="_blank">
+        <strong class="black-text">GREBOOVER</strong>
+      </a>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <!-- Left -->
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link waves-effect" href="#">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link waves-effect" href="" target="_blank">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link waves-effect"
+               href="{% url 'profile_view' user.id %}"
+               target="_blank">
+              Profile</a>
+          </li>
+        </ul>
+        <!-- Right -->
+        <ul class="navbar-nav nav-flex-icons">
+          <li class="nav-item">
+            <a href="{% url 'data_update' %}" class="nav-link waves-effect">
+              <span class="badge red z-depth-1 mr-1"></span>
+              <i class="fas fa-wrench"></i>
+              <span class="clearfix d-none d-sm-inline-block">Update</span>
+            </a>
+          </li>
+<!--          <li class="nav-item">-->
+<!--            <a class="nav-link waves-effect">-->
+<!--              <span class="badge red z-depth-1 mr-1"> 1 </span>-->
+<!--              <i class="fas fa-shopping-cart"></i>-->
+<!--              <span class="clearfix d-none d-sm-inline-block"> Cart </span>-->
+<!--            </a>-->
+<!--          </li>-->
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link waves-effect" href="{% url 'account_logout' %}">Log Out</a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link waves-effect" href="{% url 'account_login' %}">Log In</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link waves-effect" href="{% url 'account_signup' %}">Sign Up</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <nav class="navbar navbar-expand-lg mdb-color lighten-3 mt-3 mb-5">
+    <div class="container">
+    </div>
+  </nav>
+  <!-- Navbar -->
+
+  <div class="container">
+    {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
+    {% endif %}
+
+    {% block content %}
+    {% endblock content %}
+  </div>
+
+  <!-- Footer -->
+  <footer style="background-color: #000000 !important;"
+          class="page-footer font-small navbar-light">
+    <!-- Copyright -->
+    <div class="footer-copyright text-center white-text py-3">© 2019 Copyright:
+      Adkhamjon Soliev
+    </div>
+    <!-- Copyright -->
+
+  </footer>
+  <!-- Footer -->
+
+  <script type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
+  <script type="text/javascript">
+    // Animations initialization
+    new WOW().init();
+  </script>
+  {% block javascript %}
+  {% endblock javascript %}
+</body>
+
+</html>
