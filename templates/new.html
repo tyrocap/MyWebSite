@@ -1,0 +1,204 @@
+<!-- templates/home_page.html -->
+{% extends '_base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load mathfilters %}
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+<main>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col"><b>{{request.user|upper}}'S BOOKSHELVE</b></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for book in profile_books %}
+        <tr>
+          <th scope="row">{{forloop.counter}}</th>
+          <td>
+            <div class="media">
+              <img class="d-flex mr-3" src="{{book.cu_wanttoread_book.image}}"
+                   alt="Generic placeholder image">
+                <div class="media-body">
+                  <h6 class="mt-0 font-weight-bold">{{book.cu_wanttoread_book.title}}</h6>
+                  <p>
+                    <strong>
+                      by {{book.cu_wanttoread_book.author}}
+                    </strong>
+                  </p>
+                  <div class="row">
+                    <div class="col-sm-1">Progress:</div>
+                    <div class="progress col-sm-4 ml-3">
+                    {% with answer=book.cu_book_progress|div:book.cu_wanttoread_book.page_count %}
+                      <div
+                              style="background-color: #8080ff; width:{{ answer|mul:100 }}%"
+                           class="progress-bar progress-bar-success"
+                           role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">{{ answer|mul:100|floatformat }}%
+                      </div>
+                    {% endwith %}
+                    </div>
+                    <div class="col-sm-2">({{book.cu_book_progress}} of
+                      {{book.cu_wanttoread_book.page_count}})</div>
+                  </div>
+                  <div class="row">
+                    <div class="text-center m-3">
+                      <button style="border-radius: 3px;
+                              border: 1px solid #ffffff;
+                              font-weight: normal;
+                              cursor: pointer;
+                              display: inline-block;
+                              text-decoration: none;
+                              color: #ffffff;
+                              background-color: #8080ff;
+                              line-height: 1;
+                              padding: 8px 12px;
+                              font-size: 11px;
+                              padding: 4px 12px;"
+                         data-toggle="modal"
+                         data-target="#modalUpdateForm">Update progress
+                      </button>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <form class="form-inline" id='update_book_progress_form'
+                          action="{% url 'update_book_progress' %}"
+                          method="post">
+                    {% csrf_token %}
+                      {{ form|crispy }}
+                    <div class="modal" data-toggle="modal"
+                         id="modalUpdateForm"
+                         data-backdrop="false"
+                         style="box-shadow:0 0 20px;
+                                background-color: #FFFFFF;
+                                height: 240px;
+                                width: 400px;
+                                margin: 250px;
+                                z-index: 100;
+                                border: 1px #D8D8D8 solid;">
+                      <div style="
+                            border-bottom: 1px #D8D8D8 solid;
+                            color: #767676;
+                            display: table-cell;
+                            height: 50px;
+                            padding-left: 24px;
+                            vertical-align: middle;
+                            width: 400px;
+                            background-color: #F4F1EA;">
+                        <div style="background-color: #F4F1EA;" >
+                          <span>
+                            <span>Currently on</span>
+                            <input type="text" name="book_progress_input"
+                                   style="margin: 4px;
+                                          height: 20px;
+                                          width: 70px;" maxlength="3">
+                            <span>of {{book.cu_wanttoread_book.page_count}}</span>
+                            <input type="hidden" name="book_progress_id"
+                                   value="{{book.cu_wanttoread_book.id}}">
+                          </span>
+                          <span>
+<!--                            <button name="%" type="submit"-->
+<!--                                    style="background-color: #F4F1EA;-->
+<!--                                    border-radius: 3px;-->
+<!--                                    border: 1px solid #D6D0C4;-->
+<!--                                    line-height: 0.5;-->
+<!--                                    cursor: pointer;-->
+<!--                                    display: inline-block;-->
+<!--                                    padding: 8px 12px;-->
+<!--                                    color: #767676;-->
+<!--                                    font-size: 14px;">%</button>-->
+                            <button name="#" type="submit"
+                                    style="background-color: #F4F1EA;
+                                    border-radius: 3px;
+                                    border: 1px solid #D6D0C4;
+                                    line-height: 0.5;
+                                    cursor: pointer;
+                                    display: inline-block;
+                                    padding: 8px 12px;
+                                    color: #767676;
+                                    font-size: 14px;">#</button>
+                          </span>
+                          <div></div>
+                        </div>
+                      </div>
+                      <textarea type="text" style="border: 0;
+                          border-radius: 3px;
+                          border: 1px solid #D6D0C4;
+                          margin: 12px auto 0 auto;
+                          min-height: 120px;
+                          resize: none;
+                          width: 400px;" name="book_progress_note_input">
+                      </textarea>
+                      <div style="padding-bottom: 8px;
+                                  padding-left: 24px;
+                                  width: 400px;">
+                        <span style="width: 210px;
+                                    display: inline-block;
+                                    color: #999999;
+                                    font-size: 14px;
+                                    margin-top: 8px;
+                                    margin-bottom: 8px;">Max 300
+                          characters</span>
+                        <button name="cancel" data-dismiss="modal"
+                                style="background-color: transparent;
+                                    border: None;
+                                    line-height: 0.5;
+                                    cursor: pointer;
+                                    padding: 8px 12px;
+                                    color: #00635D;
+                                    font-size: 14px;
+                                    margin-top: 8px;
+                                    margin-bottom: 8px;">Cancel</button>
+                        <button name="update_progress" type="submit"
+                                style="background-color: #F4F1EA;
+                                    border: 1px solid #D6D0C4;
+                                    line-height: 0.5;
+                                    cursor: pointer;
+                                    padding: 8px 12px;
+                                    color: #767676;
+                                    font-size: 14px;
+                                    margin-top: 8px;
+                                    margin-bottom: 8px;">Update</button>
+                      </div>
+                    </div>
+                    </form>
+                  </div>
+                </div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</main>
+{% endblock content %}
+
+<!--{% block javascript %}-->
+<!--<script>-->
+
+<!--  $(document).on('submit','#{{book.cu_wanttoread_book.id}}',function(event){-->
+<!--      event.preventDefault()-->
+<!--      $.ajax({-->
+<!--          method:"POST",-->
+<!--          url:'update_book_progress/',-->
+<!--          data:{-->
+<!--                book_progress_input:$('#book_progress_input').val(),-->
+<!--                book_progress_id:$('#book_progress_id').val(),-->
+<!--                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()-->
+<!--          },-->
+<!--          success: function(){-->
+<!--                alert('Successfully submitted the form!');-->
+<!--          },-->
+<!--      })-->
+<!--  })-->
+<!--</script>-->
+<!--{% endblock javascript %}-->
+
+
+
+
+
+
